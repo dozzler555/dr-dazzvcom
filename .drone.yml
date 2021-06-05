@@ -1,29 +1,24 @@
----
-
 kind: pipeline
-type: docker
 name: default
 
 steps:
-- name: test
-  image: ventx/docker-dind
-  privileged: true
-  environment:
-    DRONE_GIT_USERNAME:
-      from_secret: DRONE_GIT_USERNAME
-    DRONE_GIT_TOKEN:
-      from_secret: DRONE_GIT_TOKEN
+  - name: test
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run
+    commands:
+      - sleep 5 # give docker enough time to start
+      - docker ps -a
 
-  volumes:
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/runss
+
+volumes:
   - name: dockersock
-    path: /var/run
-  commands:
-  - sleep 5 # give docker enough time to start
-  - docker ps -a
-  - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/dozzler555/dazzlervcom.git source
-  - cd source
-  - docker container prune --force || true
-  - docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t public-leech
-  - docker image ls
-  - docker run --privileged --rm -i public-leech
-   
+    temp: {}
