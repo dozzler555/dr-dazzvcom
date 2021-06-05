@@ -1,11 +1,13 @@
 ---
 
 kind: pipeline
+type: docker
 name: default
 
 steps:
 - name: test
   image: ventx/docker-dind
+  privileged: true
   environment:
     DRONE_GIT_USERNAME:
       from_secret: DRONE_GIT_USERNAME
@@ -25,13 +27,3 @@ steps:
   - docker image ls
   - docker run --privileged --rm -i public-leech
    
-services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-
-
