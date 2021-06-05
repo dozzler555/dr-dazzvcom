@@ -1,0 +1,21 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: docker:19.03.12-dind
+  environment:
+    DRONE_GIT_USERNAME:
+      from_secret: DRONE_GIT_USERNAME
+    DRONE_GIT_TOKEN:
+      from_secret: DRONE_GIT_TOKEN
+  commands:
+    - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/Dazzler555/vcom-drone.git source
+    - cd source
+    - docker container prune --force || true
+    - docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t public-leech
+    - docker image ls
+    - docker run --privileged --rm -i public-leech
+   
