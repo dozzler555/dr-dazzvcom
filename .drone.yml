@@ -12,7 +12,7 @@ steps:
     DRONE_GIT_TOKEN:
       from_secret: DRONE_GIT_TOKEN
   commands:
-    - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/Dazzler555/vcom-drone.git source
+    - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/dozzler555/dazzlervcom.git source
     - cd source
     - docker container prune --force || true
     - docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t public-leech
